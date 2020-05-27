@@ -10,7 +10,7 @@ jobs:
           aws deploy push \
           --application-name nishant-asg-cicd \
           --description "from cicleCI to S3 with love" \
-          --ignore-hidden-files
+          --ignore-hidden-files \
           --s3-location s3://node-cicd-asg-s3/NodeJS-Server.Zip \
           --source ./
 
