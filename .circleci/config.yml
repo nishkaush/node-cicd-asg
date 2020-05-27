@@ -7,15 +7,22 @@ jobs:
     steps:
       - checkout
       - aws-cli/install
-      - run: export TIMESTAMP=$(date +%s)
-      - run: export FILENAME="s3://node-cicd-asg-s3/NodeJS-Server_"$TIMESTAMP".zip"
       - run: |
           aws deploy push \
           --application-name nishant-asg-cicd \
           --description "from cicleCI to S3 with love" \
           --ignore-hidden-files \
-          --s3-location $FILENAME \
+          --s3-location s3://node-cicd-asg-s3/NodeJS-Server.zip \
           --source ./
+      - run: |
+          aws deploy create-deployment \
+          --application-name nishant-asg-cicd \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name asg-deployment-group \
+          --description "first time from circleCI" \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=node-cicd-asg-s3,bundleType=zip,key=NodeJS-Server.zip \
+          --auto-rollback-configuration enabled=true,events="DEPLOYMENT_FAILURE"
 
 workflows:
   asg_ec2_workflow:
