@@ -1,11 +1,12 @@
 version: 2.1
-
+orbs:
+  aws-cli: circleci/aws-cli@1.0.0
 jobs:
   nodejs_api:
-    machine:
-      image: ubuntu-1604:201903-01
+    executor: aws-cli/default
     steps:
       - checkout
+      - aws-cli/install
       - run: |
           aws deploy push \
           --application-name nishant-asg-cicd \
@@ -17,4 +18,5 @@ jobs:
 workflows:
   asg_ec2_workflow:
     jobs:
-      - nodejs_api
+      - nodejs_api:
+          context: AWS
