@@ -1,0 +1,20 @@
+version: "2.1"
+orbs:
+  aws-cli: circleci/aws-cli@1.0.0
+jobs:
+  nodejs_api:
+    machine: true
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws deploy push \
+        --application-name nishant-asg-cicd \
+        --description "from cicleCI to S3 with love" \
+        --ignore-hidden-files
+        --s3-location s3://node-cicd-asg-s3/NodeJS-Server.Zip
+        --source .
+
+workflows:
+  asg_ec2_workflow:
+    jobs:
+      - nodejs_api
