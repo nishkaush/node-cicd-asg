@@ -6,7 +6,13 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: aws --version
+      - run: |
+          aws deploy push \
+          --application-name nishant-asg-cicd \
+          --description "from cicleCI to S3 with love" \
+          --ignore-hidden-files
+          --s3-location s3://node-cicd-asg-s3/NodeJS-Server.Zip \
+          --source ./
 
 workflows:
   asg_ec2_workflow:
