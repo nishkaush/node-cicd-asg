@@ -4,6 +4,8 @@ orbs:
 jobs:
   nodejs_api:
     executor: aws-cli/default
+    environment:
+      TIMESTAMP: $(date +%s)
     steps:
       - checkout
       - aws-cli/install
@@ -12,8 +14,17 @@ jobs:
           --application-name nishant-asg-cicd \
           --description "from cicleCI to S3 with love" \
           --ignore-hidden-files \
-          --s3-location s3://node-cicd-asg-s3/NodeJS-Server.Zip \
+          --s3-location s3://node-cicd-asg-s3/NodeJS-Server_$TIMESTAMP.zip \
           --source ./
+      - run: |
+          aws deploy create-deployment \
+          --application-name nishant-asg-cicd \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name asg-deployment-group \
+          --description "first time from circleCI" \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=node-cicd-asg-s3,bundleType=zip,eTag=Tag_$(date +=%s),key=NodeJS-Server_$TIMESTAMP.zip \
+          --auto-rollback-configuration enabled=true,events="DEPLOYMENT_FAILURE"
 
 workflows:
   asg_ec2_workflow:
