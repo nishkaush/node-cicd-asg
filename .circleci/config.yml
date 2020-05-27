@@ -1,14 +1,12 @@
 version: 2.1
-orbs:
-  aws-cli: circleci/aws-cli@1.0.0
+
 jobs:
   nodejs_api:
     machine:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - aws-cli/install
-      - run: echo Hi
+      - run: aws --version
 
 workflows:
   asg_ec2_workflow:
