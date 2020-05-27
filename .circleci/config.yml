@@ -4,11 +4,10 @@ orbs:
 jobs:
   nodejs_api:
     executor: aws-cli/default
-    environment:
-      TIMESTAMP: $(date +%s)
     steps:
       - checkout
       - aws-cli/install
+      - run: export TIMESTAMP=$(date +%s)
       - run: |
           aws deploy push \
           --application-name nishant-asg-cicd \
